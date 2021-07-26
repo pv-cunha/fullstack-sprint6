@@ -11,8 +11,9 @@ public class ProductsByCode {
         validateParameters(code, products);
 
         List<Product> filteredProducts = new ArrayList<>();
+
         for (Product product : products) {
-            if (code == product.getCode()) {
+            if (code.equals(product.getCode())) {
                 filteredProducts.add(product);
             }
         }
@@ -22,6 +23,7 @@ public class ProductsByCode {
 
     private void validateParameters(Long code, List<Product> products) {
         if (code == null) throw new IllegalArgumentException("code should not be null");
+
         if (products == null) throw new IllegalArgumentException("product list should not be null");
     }
 

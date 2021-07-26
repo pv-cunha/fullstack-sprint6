@@ -27,7 +27,7 @@ class ProductsByEffectivePriceRangeTest {
         BigDecimal minimumPrice = new BigDecimal("30.0");
         BigDecimal maximumPrice = new BigDecimal("40.0");
 
-        List<Product> filteredProducts = productsByEffectivePriceRange.m(minimumPrice, maximumPrice, products);
+        List<Product> filteredProducts = productsByEffectivePriceRange.filterProductsList(minimumPrice, maximumPrice, products);
 
         assertEquals(1, filteredProducts.size());
 
@@ -42,7 +42,7 @@ class ProductsByEffectivePriceRangeTest {
         BigDecimal minimumPrice = new BigDecimal("29.90");
         BigDecimal maximumPrice = new BigDecimal("29.90");
 
-        List<Product> filteredProducts = productsByEffectivePriceRange.m(minimumPrice, maximumPrice, products);
+        List<Product> filteredProducts = productsByEffectivePriceRange.filterProductsList(minimumPrice, maximumPrice, products);
 
         assertEquals(1, filteredProducts.size());
 
@@ -57,7 +57,7 @@ class ProductsByEffectivePriceRangeTest {
         BigDecimal minimumPrice = new BigDecimal("34.90");
         BigDecimal maximumPrice = new BigDecimal("34.90");
 
-        List<Product> filteredProducts = productsByEffectivePriceRange.m(minimumPrice, maximumPrice, products);
+        List<Product> filteredProducts = productsByEffectivePriceRange.filterProductsList(minimumPrice, maximumPrice, products);
 
         assertEquals(1, filteredProducts.size());
 
