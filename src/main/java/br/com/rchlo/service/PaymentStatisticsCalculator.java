@@ -6,8 +6,6 @@ import br.com.rchlo.domain.PaymentStatus;
 import br.com.rchlo.dto.PaymentStatistics;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PaymentStatisticsCalculator {
@@ -19,21 +17,25 @@ public class PaymentStatisticsCalculator {
     }
 
     public PaymentStatistics calculate() {
-        List<Payment> allPayments = paymentRepository.all(); // será que essa é a melhor maneira de fazer isso?
+        PaymentStatistics paymentStatistics = new PaymentStatistics(this.paymentRepository);
 
-        BigDecimal maximumConfirmedPayment = BigDecimal.ZERO;
-        for (Payment payment : allPayments) {
-            if (PaymentStatus.CONFIRMED.equals(payment.getStatus()) && maximumConfirmedPayment.compareTo(payment.getAmount()) < 0) {
-                maximumConfirmedPayment = payment.getAmount();
-            }
-        }
-
-        PaymentStatistics paymentStatistics = new PaymentStatistics(maximumConfirmedPayment);
-        for (Payment payment : allPayments) {
-            PaymentStatus status = payment.getStatus();
-            paymentStatistics.addPaymentForStatus(status);
-        }
+        showPaymentStatistic(paymentStatistics);
 
         return paymentStatistics;
     }
+
+    private static void showPaymentStatistic(PaymentStatistics paymentStatistics) {
+        System.out.printf("%nMaior pagamento confirmado %.2f %n", paymentStatistics.getMaximumAmountOfConfirmedPayment());
+
+        Map<PaymentStatus, Long> quantidadeDePagamentoPorStatus = paymentStatistics.getQuantityOfPaymentsByStatus();
+
+        for (PaymentStatus paymentStatus : quantidadeDePagamentoPorStatus.keySet()) {
+            System.out.printf("Quantidade de pagamentos com status '%s': %d %n", paymentStatus, quantidadeDePagamentoPorStatus.get(paymentStatus));
+        }
+    }
+
+    private boolean isMaximumPayment(BigDecimal maximumConfirmedPayment, Payment payment, PaymentStatus paymentStatus) {
+        return paymentStatus.equals(payment.getStatus()) && maximumConfirmedPayment.compareTo(payment.getAmount()) < 0;
+    }
+
 }

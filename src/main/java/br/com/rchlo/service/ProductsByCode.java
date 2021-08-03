@@ -15,6 +15,8 @@ public class ProductsByCode {
         for (Product product : products) {
             if (code.equals(product.getCode())) {
                 filteredProducts.add(product);
+
+                product.showProduct();
             }
         }
 

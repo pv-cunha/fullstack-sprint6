@@ -13,10 +13,7 @@ public class ProductsByColorMain {
         ProductsByColor productsByColor = new ProductsByColor();
         List<Product> allProducts = ProductRepository.all();
 
-        List<Product> filteredProducts = productsByColor.filter(allProducts, Color.WHITE);
+        productsByColor.filter(allProducts, Color.WHITE);
 
-        for (Product product : filteredProducts) {
-            System.out.printf("%s - %s %n", product.getCode(), product.getName());
-        }
     }
 }

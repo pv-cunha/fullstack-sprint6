@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class ConnectionFactory {
 
@@ -19,7 +20,7 @@ public class ConnectionFactory {
 
     public static Connection getConnection() {
         try {
-            return DriverManager.getConnection("jdbc:mysql://root:123456@localhost:3306/rchlo");
+            return DriverManager.getConnection("jdbc:mysql://root:root@localhost:3306/rchlo");
         } catch (SQLException ex) {
             throw new IllegalStateException("Error while connecting with database", ex);
         }
@@ -27,7 +28,7 @@ public class ConnectionFactory {
 
     private static void runScript(String script) {
         try {
-            Path path = Paths.get(ConnectionFactory.class.getClassLoader().getResource(script).toURI());
+            Path path = Paths.get(Objects.requireNonNull(ConnectionFactory.class.getClassLoader().getResource(script)).toURI());
             String schema = Files.readString(path);
             try(Connection connection = getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(schema)) {

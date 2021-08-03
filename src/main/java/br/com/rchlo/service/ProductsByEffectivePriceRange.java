@@ -9,29 +9,31 @@ import java.util.List;
 public class ProductsByEffectivePriceRange {
 
     public List<Product> filterProductsList(BigDecimal minimumPrice, BigDecimal maximumPrice, List<Product> productsList) {
-        if (minimumPrice == null) throw new IllegalArgumentException("minimum price should not be null");
-        if (maximumPrice == null) throw new IllegalArgumentException("maximum price should not be null");
-        if (productsList == null) throw new IllegalArgumentException("product list should not be null");
+        this.validateParameters(minimumPrice, maximumPrice, productsList);
 
         List<Product> filteredList  = new ArrayList<>();
 
         for (Product product : productsList) {
-            BigDecimal finalPrice = getFinalPrice(product);
+            if (this.isBetweenMinimumPriceAndMaximumPrice(minimumPrice, maximumPrice, product)) {
+                filteredList.add(product);
 
-            if (finalPrice.compareTo(minimumPrice) >= 0 && finalPrice.compareTo(maximumPrice) <= 0) {
-                filteredList .add(product);
+                product.showProduct();
             }
         }
 
         return filteredList ;
     }
 
-    private BigDecimal getFinalPrice(Product product) {
-        BigDecimal productDiscount = product.getDiscount();
+    private boolean isBetweenMinimumPriceAndMaximumPrice(BigDecimal minimumPrice, BigDecimal maximumPrice, Product product) {
+        BigDecimal finalPrice = product.getFinalPrice();
 
-        BigDecimal productPrice = product.getPrice();
+        return finalPrice.compareTo(minimumPrice) >= 0 && finalPrice.compareTo(maximumPrice) <= 0;
+    }
 
-        return productDiscount != null ? productPrice.subtract(productDiscount) : productPrice;
+    private void validateParameters(BigDecimal minimumPrice, BigDecimal maximumPrice, List<Product> productsList) {
+        if (minimumPrice == null) throw new IllegalArgumentException("minimum price should not be null");
+        if (maximumPrice == null) throw new IllegalArgumentException("maximum price should not be null");
+        if (productsList == null) throw new IllegalArgumentException("product list should not be null");
     }
 
 }

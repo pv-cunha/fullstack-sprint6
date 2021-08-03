@@ -15,15 +15,17 @@ public class ProductsByColor {
         for (Product product : productList) {
             if (color == product.getColor()) {
                 filteredProducts.add(product);
+
+                product.showProduct();
             }
         }
 
         return filteredProducts;
     }
 
-    private void validateParameters(List<Product> productList, Color color) {
+    private void validateParameters(List<Product> productsList, Color color) {
         if (color == null) throw new IllegalArgumentException("color should not be null");
 
-        if (productList == null) throw new IllegalArgumentException("product list should not be null");
+        if (productsList == null) throw new IllegalArgumentException("product list should not be null");
     }
 }

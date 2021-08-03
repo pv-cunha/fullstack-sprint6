@@ -11,7 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PaymentRepository {
 
@@ -38,13 +40,13 @@ public class PaymentRepository {
                 YearMonth cardExpiration = YearMonth.parse(resultSet.getString("card_expiration"));
                 String cardVerificationCode = resultSet.getString("card_verification_code");
 
-                var card = new Card(cardHolderName, cardNumber, cardExpiration, cardVerificationCode);
+                Card card = new Card(cardHolderName, cardNumber, cardExpiration, cardVerificationCode);
 
                 var status = PaymentStatus.valueOf(resultSet.getString("status"));
 
-                var pagamento = new Payment(id, amount, card, status);
+                Payment payment = new Payment(id, amount, card, status);
 
-                allPayments.add(pagamento);
+                allPayments.add(payment);
 
             }
         } catch (SQLException ex) {
@@ -53,4 +55,54 @@ public class PaymentRepository {
 
         return allPayments;
     }
+
+    public BigDecimal getMaximumPayment() {
+        BigDecimal maximumValue = BigDecimal.ZERO;
+
+        String query = "select MAX(amount) as amount from payment where status = 'CONFIRMED';";
+
+        ConnectionFactory.init();
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()) {
+                maximumValue = resultSet.getBigDecimal("amount");
+            }
+
+            return maximumValue;
+
+        } catch (SQLException exception) {
+            throw new IllegalStateException("Error retrieving payment", exception);
+        }
+    }
+
+    public Map<PaymentStatus, Long> getListByStatus() {
+        Map<PaymentStatus, Long> listByStatus = new HashMap<>();
+
+        String query = "select status, COUNT(id) from payment group by status;";
+
+        ConnectionFactory.init();
+
+        try (Connection connection = ConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()) {
+
+                PaymentStatus status = PaymentStatus.valueOf(resultSet.getString("status"));
+                Long count = resultSet.getLong("COUNT(id)");
+
+                listByStatus.put(status, count);
+            }
+        } catch (SQLException ex) {
+            throw new IllegalStateException("Error retrieving payments", ex);
+        }
+
+        return listByStatus;
+    }
+
 }

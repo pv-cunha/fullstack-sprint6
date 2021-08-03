@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Set;
 
-public class Product {
+public class Product implements Comparable<Product> {
 
     private final Long code;
     private final String name;
@@ -76,6 +76,18 @@ public class Product {
         return availableSizes;
     }
 
+    public void showProduct() {
+        System.out.printf("%s - %s - R$ %.2f %n", this.getCode(), this.getName(), this.getFinalPrice());
+    }
+
+    public BigDecimal getFinalPrice() {
+        BigDecimal productDiscount = this.getDiscount();
+
+        BigDecimal productPrice = this.getPrice();
+
+        return productDiscount != null ? productPrice.subtract(productDiscount) : productPrice;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -106,5 +118,10 @@ public class Product {
                 ", image='" + image + '\'' +
                 ", availableSizes=" + availableSizes +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Product product) {
+        return this.getCode().compareTo(product.getCode());
     }
 }

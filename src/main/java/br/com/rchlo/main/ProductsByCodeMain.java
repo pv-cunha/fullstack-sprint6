@@ -15,10 +15,6 @@ public class ProductsByCodeMain {
 
         List<Product> filteredProducts = productsByCodeFilter.filter(14040174L, allProducts);
 
-        for (Product product : filteredProducts) {
-            System.out.printf("%s - %s %n", product.getCode(), product.getName());
-        }
-
     }
 
 }
