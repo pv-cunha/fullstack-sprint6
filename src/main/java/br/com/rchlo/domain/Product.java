@@ -81,19 +81,21 @@ public class Product implements Comparable<Product> {
     }
 
     public BigDecimal getFinalPrice() {
-        BigDecimal productDiscount = this.getDiscount();
+        boolean productDiscount = this.getDiscount() != null;
 
-        BigDecimal productPrice = this.getPrice();
+        if (!productDiscount) {
+            return this.getPrice();
+        }
 
-        return productDiscount != null ? productPrice.subtract(productDiscount) : productPrice;
+        return  this.getPrice().subtract(this.getDiscount());
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
 
-        Product product = (Product) o;
+        Product product = (Product) object;
 
         return Objects.equals(code, product.code);
     }
